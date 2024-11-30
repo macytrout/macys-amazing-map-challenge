@@ -4,4 +4,5 @@ Day 2 - Lines
 
 Day 14 - World Map 
 
+![UFO](https://github.com/user-attachments/assets/b959b7d2-713e-4a55-8f9b-4ec2ca9b1902)
 
