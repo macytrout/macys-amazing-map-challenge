@@ -1,0 +1,179 @@
+---
+title: "30DayMapChallenge - Hexagons: Visualizing State Data"
+author: "Macy Trout"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: paper
+    highlight: kate
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+# Map Title: Most Googled NFL Teams by State
+
+Description:
+This map visualizes the most googled NFL teams across each U.S. state based on data from Google Trends. Each state is represented by a hexagon, color-coded to indicate the most popular NFL team within that state over the last 30 days.
+
+Design Considerations:
+- Hexagonal Grid: The hexagonal map was chosen for its visually clean and consistent layout, eliminating the distortion caused by varying state sizes on traditional geographic maps.
+
+- Color Palette: Distinct team colors were used to ensure clear identification of each team, with shades chosen to align with official team branding.
+
+- Dark Background: A dark greige background was selected to create contrast and make the vibrant team colors pop, enhancing visual appeal.
+
+- State Labels: Abbreviations for each state were added to improve map readability without overwhelming the design.
+
+- Legend Placement: The legend was positioned at the top in a horizontal format for better integration into the overall layout, ensuring it doesn’t interfere with the map visualization.
+
+- Font Choices: Playfair was used for titles and captions to give the map a modern and elegant appearance, while Lato was used for in-map text for clarity and simplicity.
+
+The goal was to create an engaging, visually appealing, and easily interpretable map that highlights regional NFL team popularity at a glance. The design balances aesthetics and functionality, ensuring the data is easy to understand while providing an appealing visual narrative.
+
+
+```{r, include=TRUE, echo=TRUE}
+library(tidyverse)
+library(gtrendsR)
+library(sf)
+library(rcartocolor)
+library(showtext)
+
+
+hex_grid_path <- "/Users/MacyTrout/Desktop/R Studio Files/30 day map challenge/Hexagon/us_states_hexgrid.geojson.json"
+
+
+hex_grid <- st_read(hex_grid_path, quiet=TRUE) %>%
+  mutate(state_abbr = iso3166_2)
+
+nfl_teams <- c("Philadelphia Eagles", "Kansas City Chiefs", "Dallas Cowboys", "San Francisco 49ers")
+nfl_trends <- gtrends(keyword = nfl_teams, geo = "US", time = "today 1-m")$interest_by_region
+
+
+nfl_trends <- nfl_trends %>%
+  mutate(
+    state_abbr = usdata::state2abbr(location),
+    state_abbr = ifelse(location == "District of Columbia", "DC", state_abbr),
+    hits = replace_na(as.numeric(hits), 0)  # Replace NA hits with 0
+  )
+
+missing_abbr <- setdiff(hex_grid$state_abbr, nfl_trends$state_abbr)
+
+
+nfl_trends <- nfl_trends %>%
+  group_by(state_abbr) %>%
+  top_n(1, hits)
+
+hex_map_data <- hex_grid %>%
+  left_join(nfl_trends, by = "state_abbr")
+
+
+hex_map_data <- hex_map_data %>%
+  mutate(keyword = replace_na(keyword, "No Data"))
+
+```
+
+```{r hex-map, fig.width=12, fig.height=8, quiet = TRUE}
+
+
+library(tidyverse)
+library(sf)
+library(rcartocolor)
+library(showtext)
+
+
+font_add_google("Playfair Display", "Playfair")
+showtext_auto()
+
+
+state_labels <- hex_grid %>%
+  mutate(geometry = st_centroid(geometry)) %>%
+  st_coordinates() %>%  # Extract coordinates
+  as.data.frame() %>%
+  mutate(state_abbr = hex_grid$state_abbr)
+
+hex_map <- ggplot(hex_map_data) +
+  geom_sf(aes(fill = keyword), color = "grey", size = 0.3) +
+  scale_fill_manual(
+    values = c(
+      "Philadelphia Eagles" = "#004C54",
+      "Kansas City Chiefs" = "#E31837",
+      "Dallas Cowboys" = "#041E42",
+      "San Francisco 49ers" = "#AA0000",
+      "No Data" = "grey60"
+    ),
+    breaks = c(
+      "Philadelphia Eagles", 
+      "Kansas City Chiefs", 
+      "Dallas Cowboys", 
+      "San Francisco 49ers"
+    ),
+    labels = c(
+      "Philadelphia Eagles", 
+      "Kansas City Chiefs", 
+      "Dallas Cowboys", 
+      "San Francisco 49ers"
+    ),
+    name = NULL
+  ) +
+  geom_text(
+    data = state_labels,
+    aes(X, Y, label = state_abbr),
+    family = "Lato", size = 3, color = "white"
+  ) +
+  labs(
+    title = "Most Googled NFL Teams by State",
+    subtitle = "Data from Google Trends (November 2024)",
+    caption = "Visualization by Macy Trout | Data: Google Trends"
+  ) +
+  theme_void() +
+  theme(
+    panel.background = element_rect(fill = "#2F2C2A", color = NA),
+    plot.background = element_rect(fill = "#2F2C2A", color = NA),
+
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    
+    plot.title = element_text(
+      family = "Playfair", size = 24, face = "bold", hjust = 0.5,
+      margin = margin(t = 30, b = 10),
+      color = "white"
+    ),
+    plot.subtitle = element_text(
+      family = "Playfair", size = 15, hjust = 0.5, margin = margin(b = 25),
+      color = "white"
+    ),
+
+    plot.caption = element_text(
+      family = "Playfair", size = 10, hjust = 0.5, color = "grey80", margin = margin(t = 20)
+    ),
+    
+
+    legend.position = "top",
+    legend.direction = "horizontal",
+    legend.title = element_blank(),
+    legend.text = element_text(
+      family = "Playfair", size = 12, color = "white"
+    ),
+    legend.key.height = unit(0.5, "cm"),
+    legend.key.width = unit(1.0, "cm")
+  )
+
+
+print(hex_map)
+
+```
+
+
+
+
+
+
+
