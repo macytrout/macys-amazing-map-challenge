@@ -11,3 +11,5 @@ Day 14 - World Map
 
 ![UFO](https://github.com/user-attachments/assets/b959b7d2-713e-4a55-8f9b-4ec2ca9b1902)
 
+Day 26 - Projections
+![projections](https://github.com/user-attachments/assets/a497cb99-f9db-41fa-8a80-94deb6d152d3)
