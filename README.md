@@ -10,6 +10,11 @@ Day 6 - Raster
 
 ![Raster-Day6](https://github.com/user-attachments/assets/286d53a9-2be2-43d1-9c48-eb3607bd5a3b)
 
+Day 9 - AI Only
+![AI_Only](https://github.com/user-attachments/assets/6663bc35-912d-4d0e-8816-28b0517f0dc5)
+
+
+
 Day 13 (and 18) - A New Tool & 3D
 
 <img width="751" alt="Philly2" src="https://github.com/user-attachments/assets/e5e8c042-7879-4782-ac45-b253465a1466">
