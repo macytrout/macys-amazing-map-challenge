@@ -11,6 +11,11 @@ Day 14 - World Map
 
 ![UFO](https://github.com/user-attachments/assets/b959b7d2-713e-4a55-8f9b-4ec2ca9b1902)
 
+Day 16 - Chloropleth
+
+<img width="546" alt="chloro" src="https://github.com/user-attachments/assets/0f09ee64-bd82-49cb-90ae-73e03542b79b">
+
+
 Day 22 - 2 Colors 
 
 <img width="639" alt="Screenshot 2024-12-01 at 11 47 31 PM" src="https://github.com/user-attachments/assets/afbb14d8-fbaa-4db9-96c2-0f5f89680613">
