@@ -10,6 +10,11 @@ Day 6 - Raster
 
 ![Raster-Day6](https://github.com/user-attachments/assets/286d53a9-2be2-43d1-9c48-eb3607bd5a3b)
 
+Day 13 (and 18) - A New Tool & 3D
+
+<img width="751" alt="Philly2" src="https://github.com/user-attachments/assets/e5e8c042-7879-4782-ac45-b253465a1466">
+<img width="1029" alt="Philly1" src="https://github.com/user-attachments/assets/1a6aa7c0-97d1-4a89-a4f9-f162ea0c4959">
+
 
 Day 14 - World Map 
 
