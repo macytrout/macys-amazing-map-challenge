@@ -6,6 +6,10 @@ Day 4 - Hexagona
 
 <img width="799" alt="Screenshot 2024-11-30 at 3 29 34 PM" src="https://github.com/user-attachments/assets/f92d62b2-a232-4fa7-89b2-da10161ce345">
 
+Day 6 - Raster
+
+![Raster-Day6](https://github.com/user-attachments/assets/286d53a9-2be2-43d1-9c48-eb3607bd5a3b)
+
 
 Day 14 - World Map 
 
