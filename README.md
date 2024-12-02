@@ -37,3 +37,8 @@ Day 22 - 2 Colors
 
 Day 26 - Projections
 ![projections](https://github.com/user-attachments/assets/a497cb99-f9db-41fa-8a80-94deb6d152d3)
+
+Day 30 - The Final Map
+![Day30_THEFINAL](https://github.com/user-attachments/assets/b4ee0148-413b-43a7-8354-42e08d2c9b4c)
+
+
