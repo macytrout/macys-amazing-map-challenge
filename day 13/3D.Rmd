@@ -1,0 +1,145 @@
+---
+title: "Philadelphia Population Density: 3D Visualizations"
+author: "Macy Trout"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
+    code_folding: hide
+    toc_depth: 2
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+The 3D population density map builds upon the 2D visualization by adding a vertical dimension to represent density dynamically. This approach emphasizes population density differences across Census tracts in a visually compelling way, allowing viewers to intuitively grasp the variation in density across Philadelphia. The added height provides a more engaging perspective compared to the static 2D map.
+
+**Design Considerations**
+
+Perspective:
+
+- The map is rendered with a horizontal rotation (theta = 45°) and vertical tilt (phi = 45°), providing a balanced and clear perspective.
+
+- These settings ensure that viewers can perceive the relative height differences across the city without obscuring the details.
+
+Height Exaggeration:
+
+- The vertical scale (scale = 350) was carefully chosen to emphasize density variations between tracts. This ensures that even smaller differences are noticeable while keeping the proportions realistic.
+
+Shadows:
+
+- A sun angle of 240° casts dynamic shadows, adding depth and contrast to the visualization, making it easier to distinguish between areas with similar heights.
+
+Color Palette:
+
+- The magma color palette, consistent with the 2D map, uses a gradient from deep purple to bright orange to reflect density values. The vibrant contrast ensures high-density areas stand out prominently.
+
+Background:
+
+- A clean white background was selected to minimize visual distractions and allow the map’s features to remain the focal point.
+
+**Outcome**
+
+The 3D map effectively highlights high-density areas such as Center City, parts of West Philadelphia, and other urban cores. The dynamic perspective draws attention to the stark contrasts between dense and sparse regions, creating a powerful tool for understanding spatial population distribution.
+
+This visualization combines aesthetics and functionality, offering a deeper, more intuitive understanding of Philadelphia’s population density patterns. It is well-suited for presentations, reports, or engaging stakeholders in discussions about urban density and planning.
+
+
+
+```{r}
+library(sf)
+library(dplyr)
+library(tidycensus)
+library(sf)
+library(ggplot2)
+library(rayshader)
+library(showtext)
+library(dplyr)
+library(rgl)
+
+philly_data <- st_read("/Users/macytrout/Desktop/philadelphia.geojson", quiet=TRUE)
+```
+
+```{r echo=TRUE, results='hide'}
+philly_census <- suppressMessages(
+  get_acs(
+    geography = "tract",
+    variables = c(population = "B01003_001"),
+    state = "PA",
+    county = "Philadelphia",
+    geometry = TRUE,
+    year = 2020
+  )
+)
+
+
+philly_census <- philly_census %>%
+  st_transform(crs = "+proj=longlat +datum=WGS84") %>%
+  mutate(
+    area_km2 = st_area(geometry) / 1e6, 
+    pop_density = estimate / as.numeric(area_km2)
+
+)
+```
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+library(viridis)
+
+font <- "Advent Pro"
+font_add_google(font)
+showtext_auto()
+
+p <- ggplot() +
+  geom_sf(data = philly_census, aes(fill = pop_density), color = NA) +
+  scale_fill_viridis_c(
+    option = "magma",
+    trans = "log",
+    name = "Population Density\n(people/km²)",
+    labels = scales::comma
+  ) +
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(size = 12, face = "bold", family = font),
+    legend.text = element_text(size = 10, family = font),
+    plot.background = element_rect(fill = "#f0f0f0", color = NA)
+  )
+```
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+library(rgl)
+
+plot_gg(
+  p,
+  multicore = TRUE,
+  width = 8, 
+  height = 6.285714, 
+  zoom = 0.8,
+  sunangle = 240,
+  theta = 45,
+  phi = 45,
+  solidcolor = "white",
+  verbose = TRUE,
+  windowsize = c(1400, 866),
+  scale = 350,
+  raytrace = TRUE,
+  triangulate = TRUE
+)
+# code for rendering the 3D MAP below...
+
+# render_highquality("philly_3D_population_density_refined.png", samples = 300)
+
+```
+
+```{r 3d-map, echo=FALSE, out.width="500"}
+knitr::include_graphics("/Users/macytrout/Desktop/Philly2.png")
+
+```
+
+```{r 3d-map2, echo=FALSE, out.width="500"}
+knitr::include_graphics("/Users/macytrout/Desktop/Philly1.png")
+
+```
+
