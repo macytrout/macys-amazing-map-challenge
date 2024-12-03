@@ -1,0 +1,124 @@
+---
+title: "Hockey Teams in Pennsylvania"
+author: "Macy Trout"
+date: "2024-12-01"
+output:
+  html_document:
+    code_folding: hide
+    theme: paper
+    highlight: kate
+---
+
+This project maps the locations and arena capacities of Pennsylvania’s professional hockey teams, including the NHL’s Flyers and Penguins and the AHL’s Phantoms, Bears, and Wilkes-Barre/Scranton Penguins. The design incorporates hockey-inspired elements like icy blue tones, star-shaped markers, and a minimalist layout to reflect the sport’s theme.
+
+Map Description and Design Considerations
+
+Map 1: Hockey Team Locations
+
+This map displays team locations, with star sizes representing arena capacities. The dark blue background and white/blue stars evoke a hockey rink, while clean labels ensure clarity.
+
+Key Design Choices:
+- Color Palette: Dark blue tones for the background; white and light blue for stars to emphasize the icy theme.
+
+- Point Representation: Stars sized by arena capacity to reflect audience potential.
+
+- Labels: Simple and clear, positioned to avoid crowding.
+
+Reflection
+
+This map effectively visualizes Pennsylvania’s hockey teams, balancing aesthetics and analysis. Arena capacities provide context beyond geography, while the clean design and cool tones align with hockey’s visual identity.
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+teams <- data.frame(
+  Team = c("Philadelphia Flyers", "Pittsburgh Penguins", 
+           "Wilkes-Barre/Scranton Penguins", "Lehigh Valley Phantoms"),
+  League = c("NHL", "NHL", "AHL", "AHL"),
+  City = c("Philadelphia", "Pittsburgh", "Wilkes-Barre", "Allentown"),
+  Longitude = c(-75.172, -80.005, -75.880, -75.490),
+  Latitude = c(39.950, 40.440, 41.245, 40.611)
+)
+
+
+teams_sf <- st_as_sf(teams, coords = c("Longitude", "Latitude"), crs = 4326)
+
+```
+
+
+
+
+```{r, warning=FALSE, message=FALSE}
+library(devtools)
+library(rnaturalearthhires)
+library(rnaturalearth)
+library(sf)
+
+
+usa <- ne_states(country = "United States of America", returnclass = "sf")
+
+
+library(dplyr)
+
+
+pennsylvania <- usa %>% filter(name == "Pennsylvania")
+```
+
+
+```{r hockey-map, echo=TRUE, fig.width=8, fig.height=6, dpi=150, fig.align="center"}
+library(ggplot2)
+library(sf)
+library(showtext)
+
+font_add_google("Libre Baskerville", "libre_baskerville")
+showtext_auto()
+
+teams <- data.frame(
+  Team = c("Philadelphia Flyers", "Pittsburgh Penguins", 
+           "Wilkes-Barre/Scranton Penguins", "Lehigh Valley Phantoms", "Hershey Bears"),
+  League = c("NHL", "NHL", "AHL", "AHL", "AHL"),
+  Longitude = c(-75.172, -80.005, -75.880, -75.490, -76.652),
+  Latitude = c(39.950, 40.440, 41.245, 40.611, 40.285),
+  Capacity = c(19500, 18387, 8300, 8500, 10500)
+)
+
+ggplot() +
+  geom_sf(data = pennsylvania, fill = "#202A44", color = "white", size = 0.8) +
+  geom_point(data = teams, aes(x = Longitude, y = Latitude, size = Capacity), 
+             shape = 8, fill = "white", color = "#ADD8E6", stroke = 1.2) +
+  geom_text(data = teams, aes(x = Longitude, y = Latitude, label = Team),
+            vjust = -1.5, size = 4, family = "libre_baskerville", color = "white") +
+  scale_size_continuous(range = c(4, 10), breaks = c(8000, 10000, 15000, 20000),
+                        name = "Arena Capacity") +
+  coord_sf(xlim = c(-81, -74), ylim = c(39, 42.5), expand = FALSE) +
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "#1B2735", color = NA),
+    panel.background = element_blank(),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5, family = "libre_baskerville", color = "#ADD8E6"),
+    plot.subtitle = element_text(size = 16, hjust = 0.5, family = "libre_baskerville", color = "white"),
+    legend.position = "bottom",
+    legend.title = element_text(size = 14, face = "bold", family = "libre_baskerville", color = "white"),
+    legend.text = element_text(size = 12, family = "libre_baskerville", color = "white"),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_line(color = "#2E4C6D", size = 0.2)
+  ) +
+  labs(
+    title = "Hockey Teams in Pennsylvania",
+    subtitle = "NHL and AHL Teams with Arena Capacities",
+    size = "Arena Capacity"
+  ) 
+```
+
+
+
