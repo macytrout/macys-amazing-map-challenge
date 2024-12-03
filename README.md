@@ -26,9 +26,7 @@
 <img width="1029" alt="Philly1" src="https://github.com/user-attachments/assets/1a6aa7c0-97d1-4a89-a4f9-f162ea0c4959">
 
 
-[Day 14 - World Map 
-
-](https://github.com/macytrout/macys-amazing-map-challenge/tree/main/day%2014)
+[Day 14 - World Map](https://github.com/macytrout/macys-amazing-map-challenge/tree/main/day%2014)
 ![UFO](https://github.com/user-attachments/assets/b959b7d2-713e-4a55-8f9b-4ec2ca9b1902)
 
 [Day 16 - Chloropleth](https://github.com/macytrout/macys-amazing-map-challenge/tree/main/day%2016)
