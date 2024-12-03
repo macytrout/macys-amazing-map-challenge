@@ -27,6 +27,7 @@
 
 
 [Day 14 - World Map 
+
 ](https://github.com/macytrout/macys-amazing-map-challenge/tree/main/day%2014)
 ![UFO](https://github.com/user-attachments/assets/b959b7d2-713e-4a55-8f9b-4ec2ca9b1902)
 
@@ -41,9 +42,11 @@
 
 
 [Day 26 - Projections](https://github.com/macytrout/macys-amazing-map-challenge/tree/main/day%2026)
+
 ![projections](https://github.com/user-attachments/assets/a497cb99-f9db-41fa-8a80-94deb6d152d3)
 
 [Day 30 - The Final Map](https://github.com/macytrout/macys-amazing-map-challenge/tree/main/day%2030)
+
 ![Day30_THEFINAL](https://github.com/user-attachments/assets/b4ee0148-413b-43a7-8354-42e08d2c9b4c)
 
 
