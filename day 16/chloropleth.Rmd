@@ -1,0 +1,83 @@
+---
+title: "Day 16 - Chloropleth"
+author: "Macy Trout"
+date: "2024-12-01"
+output:
+  html_document:
+    code_folding: hide
+    theme: paper
+    highlight: kate
+---
+
+This map illustrates the Birth-to-Death Ratio across European regions in 2008, offering insights into regional demographic trends. Regions with a higher birth rate relative to death rate are shaded in warm colors (reds), indicating population growth potential, while regions with a lower ratio are represented in cool colors (blues), highlighting areas with slower demographic renewal or population decline. This visualization effectively captures regional disparities in demographic patterns.
+
+Design Considerations
+
+- Color Palette: A diverging color palette (plasma from viridis) was chosen for its accessibility and ability to clearly distinguish between low and high values. The smooth gradient emphasizes the contrast between regions while maintaining visual harmony.
+
+- Background Layers: A neutral blue background for the sea and a soft grey for neighboring non-European countries were selected to provide context without overwhelming the primary data.
+
+- Borders: Regional borders were enhanced with darker tones to ensure clear separation between areas, aiding in map readability.
+
+- Legend Placement: The legend was placed in the top-right corner for optimal visibility while keeping the map itself uncluttered.
+
+- Data Focus: Regions with missing or zero data were excluded to eliminate visual noise and maintain focus on areas with meaningful information.
+
+- Overall Aesthetic: The map adopts a clean and modern design, balancing functionality and aesthetic appeal to make demographic patterns easy to interpret.
+
+Insights
+
+This map highlights notable regional variations in demographic behavior. Warm-colored regions, particularly in Eastern Europe, indicate higher birth-to-death ratios, suggesting stronger population growth trends, while cooler regions, like parts of Western Europe, may reflect aging populations or lower birth rates.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+```{r, echo=TRUE, fig.width=8, fig.height=6, dpi=150, fig.align="center", warning=FALSE, message=FALSE}
+library(cartography)
+library(sp)
+
+
+nuts2.df$birth_death_ratio <- nuts2.df$birth_2008 / nuts2.df$death_2008
+
+
+nuts2.df <- nuts2.df[!is.na(nuts2.df$birth_death_ratio) & nuts2.df$birth_death_ratio > 0, ]
+nuts2.spdf <- nuts2.spdf[nuts2.spdf@data$id %in% nuts2.df$id, ]
+
+library(viridis)
+
+cols <- viridis(6, option = "plasma")
+
+plot(nuts0.spdf, border = NA, col = NA, bg = "#f0f8ff")
+plot(world.spdf, col = "#d9d9d9", border = NA, add = TRUE) 
+
+
+choroLayer(
+  spdf = nuts2.spdf, df = nuts2.df, var = "birth_death_ratio",
+  breaks = c(0.5, 1, 1.5, 2, 2.5, 3), col = cols,
+  border = "#2d2d2d",
+  lwd = 0.3,
+  legend.pos = "bottomright", # Legend moved to top-right
+  legend.title.txt = "Birth-to-Death Ratio",
+  legend.values.rnd = 2, add = TRUE
+)
+
+plot(nuts0.spdf, border = "#4a4a4a", lwd = 0.8, add = TRUE)
+
+
+
+layoutLayer(
+  title = "Birth-to-Death Ratio in Europe (2008)",
+  author = "Source: Eurostat, 2008 | Visualization: cartography",
+  frame = TRUE,
+  col = NA,
+  coltitle = "#4a4a4a",
+  south = TRUE,
+  tabtitle = TRUE,
+  scale = NULL
+)
+```
+
+
+=
